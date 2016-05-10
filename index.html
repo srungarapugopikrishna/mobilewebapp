@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+<script type = "text/javascript" language = "javascript">
+ 
+    $(document).ready(function() {    
+    //Task1 	
+    	$("#result1").click(function(event){
+    		var url1= "http://api.census.gov/data/timeseries/idb/1year?get=AREA_KM2,NAME,AGE,POP&FIPS="+$("#FIPS1").val()+"&time="+$("#YEAR1").val()+"&SEX="+'';
+    		
+    		$.getJSON(url1,function( data ) {
+    			var items=[];
+    			$.each( data, function(key,value) {
+    				var str = value.toString();
+    				var res = str.split(",");
+
+    				items.push( "<li id='" + key + "'>" + res[0]+" "+res[1]+"   "+res[2]+"   "+res[3]+"   "+res[4]+"   "+res[5]+"   "+res[6]+"   "+ "</li>" );
+    				console.log(value);
+    				});
+    			$( "<ul/>", {
+    				"class": "my-new-list",
+    				html: items.join( "" )
+    				}).appendTo( "body" );
+    			});
+    		});
+    	//////////////////////////////////////////////////////////////////////////////////
+    	//Task2
+    	$("#result1").click(function(event){
+    		var url1= "http://api.census.gov/data/timeseries/idb/1year?get=AREA_KM2,NAME,AGE,POP&FIPS="+$("#FIPS1").val()+"&time="+$("#YEAR1").val()+"&SEX="+'';
+    		
+    		$.getJSON(url1,function( data ) {
+    			var items=[];
+    			$.each( data, function(key,value) {
+    				var str = value.toString();
+    				var res = str.split(",");
+
+    				items.push( "<li id='" + key + "'>" + res[0]+" "+res[1]+"   "+res[2]+"   "+res[3]+"   "+res[4]+"   "+res[5]+"   "+res[6]+"   "+ "</li>" );
+    				console.log(value);
+    				});
+    			$( "<ul/>", {
+    				"class": "my-new-list",
+    				html: items.join( "" )
+    				}).appendTo( "body" );
+    			});
+    		});
+    	//////////////////////////////////////////////////////////////////////////////////
+
+
+
+    	});
+
+</script>
+</head>
+<body>
+Task 1:<br>
+Population for all ages for a given country and year:<br>
+Country(Ex: IN - India, UK - United Kingdom, US - United States, CA - Canada):<br>
+<input type = "text" id = "FIPS1" /><br>
+Year(2010 to 2014):<br>
+<input type = "text" id = "YEAR1" /><br>
+<input type = "button" id = "result1" value = "Get Data" />
+<br>Task 2:<br>
+Percentage increase/decrease in population for all ages for given years duration for a given country:<br>
+Country(Ex: IN - India, UK - United Kingdom, US - United States, CA - Canada):<br>
+<input type = "text" id = "FIPS1" /><br>
+Year(2010 to 2014):<br>
+<input type = "text" id = "YEAR2.1" /><br>
+<input type = "text" id = "YEAR2.2" /><br>
+<input type = "button" id = "result1" value = "Get Data" />
+</body>
+</html>
