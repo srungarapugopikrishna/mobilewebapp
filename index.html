@@ -4,8 +4,8 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
 <script type = "text/javascript" language = "javascript">
  
-    $(document).ready(function() {    
-    //Task1 	
+    $(document).ready(function() {
+    //Task1
     	$("#result1").click(function(event){
     		var url1= "http://api.census.gov/data/timeseries/idb/1year?get=AREA_KM2,NAME,AGE,POP&FIPS="+$("#FIPS1").val()+"&time="+$("#YEAR1").val()+"&SEX="+'';
     		
@@ -16,7 +16,7 @@
     				var res = str.split(",");
 
     				items.push( "<li id='" + key + "'>" + res[0]+" "+res[1]+"   "+res[2]+"   "+res[3]+"   "+res[4]+"   "+res[5]+"   "+res[6]+"   "+ "</li>" );
-    				console.log(value);
+    			//	console.log(value);
     				});
     			$( "<ul/>", {
     				"class": "my-new-list",
@@ -26,27 +26,44 @@
     		});
     	//////////////////////////////////////////////////////////////////////////////////
     	//Task2
-    	$("#result1").click(function(event){
-    		var url1= "http://api.census.gov/data/timeseries/idb/1year?get=AREA_KM2,NAME,AGE,POP&FIPS="+$("#FIPS1").val()+"&time="+$("#YEAR1").val()+"&SEX="+'';
-    		
+    	$("#result2").click(function(event){
+    		var url1= "http://api.census.gov/data/timeseries/idb/1year?get=AGE,POP&FIPS="+$("#FIPS2").val()+"&time="+$("#YEAR2_1").val();
+    		var url2= "http://api.census.gov/data/timeseries/idb/1year?get=AGE,POP&FIPS="+$("#FIPS2").val()+"&time="+$("#YEAR2_2").val();
+    		var myArray=[];
+    		var items=[];
     		$.getJSON(url1,function( data ) {
-    			var items=[];
+    			var count=0;
     			$.each( data, function(key,value) {
     				var str = value.toString();
     				var res = str.split(",");
+	   				myArray[count]=res[1];
+	   			    count=count+1;
+    				});
+    			});
+    		$.getJSON(url2,function( data ) {
+    			var count=0;
+    			$.each( data, function(key,value) {
+    				var str = value.toString();
+    				var res = str.split(",");
+            		var a= myArray[count]
+            		var b=res[1];
+            		if(count>0){
+            			var popCalc=((b-a)/a)*100;
+            			items.push( "<li id='" + key + "'>" + res[0]+" "+popCalc+"</li>" );
+            		}else{
+            			items.push( "<li id='" + key + "'>" + res[0]+" "+res[1]+"</li>" );
+            		}
+            		count=count+1;
 
-    				items.push( "<li id='" + key + "'>" + res[0]+" "+res[1]+"   "+res[2]+"   "+res[3]+"   "+res[4]+"   "+res[5]+"   "+res[6]+"   "+ "</li>" );
-    				console.log(value);
     				});
     			$( "<ul/>", {
     				"class": "my-new-list",
     				html: items.join( "" )
     				}).appendTo( "body" );
-    			});
     		});
+    			});
+    		
     	//////////////////////////////////////////////////////////////////////////////////
-
-
 
     	});
 
@@ -63,10 +80,10 @@ Year(2010 to 2014):<br>
 <br>Task 2:<br>
 Percentage increase/decrease in population for all ages for given years duration for a given country:<br>
 Country(Ex: IN - India, UK - United Kingdom, US - United States, CA - Canada):<br>
-<input type = "text" id = "FIPS1" /><br>
+<input type = "text" id = "FIPS2" /><br>
 Year(2010 to 2014):<br>
-<input type = "text" id = "YEAR2.1" /><br>
-<input type = "text" id = "YEAR2.2" /><br>
-<input type = "button" id = "result1" value = "Get Data" />
+Year1: <input type = "text" id = "YEAR2_1" /><br>
+Year2: <input type = "text" id = "YEAR2_2" /><br>
+<input type = "button" id = "result2" value = "Get Data" />
 </body>
 </html>
