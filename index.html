@@ -64,6 +64,43 @@
     			});
     		
     	//////////////////////////////////////////////////////////////////////////////////
+    	//Task3
+    	$("#result3").click(function(event){
+    		var url1= "http://api.census.gov/data/timeseries/idb/1year?get=AGE,POP&FIPS="+$("#FIPS3").val()+"&time="+$("#YEAR3").val()+"&SEX=1";
+    		var url2= "http://api.census.gov/data/timeseries/idb/1year?get=AGE,POP&FIPS="+$("#FIPS3").val()+"&time="+$("#YEAR3").val()+"&SEX=2";
+    		var myArray=[];
+    		var items=[];
+    		$.getJSON(url1,function( data ) {
+    			var count=0;
+    			$.each( data, function(key,value) {
+    				var str = value.toString();
+    				var res = str.split(",");
+	   				myArray[count]=res[1];
+//	   				console.log(res[1]);
+	   			    count=count+1;
+    				});
+    			});
+    		$.getJSON(url2,function( data ) {
+    			var count=0;
+    			$.each( data, function(key,value) {
+    				var str = value.toString();
+    				var res = str.split(",");
+            		if(count>0){
+            			items.push( "<li id='" + key + "'>" + res[0]+"&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+myArray[count]+"&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+res[1]+"</li>" );
+            		}else{
+            			items.push( "<li id='" + key + "'>" + res[0]+"&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+"MALE"+"&nbsp&nbsp&nbsp&nbsp&nbsp"+"FEMALE"+"</li>" );
+            		}
+            		count=count+1;
+
+    				});
+    			$( "<ul/>", {
+    				"class": "my-new-list",
+    				html: items.join( "" )
+    				}).appendTo( "body" );
+    		});
+    			});
+    		
+    	//////////////////////////////////////////////////////////////////////////////////
 
     	});
 
@@ -85,5 +122,12 @@ Year(2010 to 2014):<br>
 Year1: <input type = "text" id = "YEAR2_1" /><br>
 Year2: <input type = "text" id = "YEAR2_2" /><br>
 <input type = "button" id = "result2" value = "Get Data" />
+<br>Task 3:<br>
+Display male and female population for all ages for the year "2014" and country "IN".
+Country(Ex: IN - India, UK - United Kingdom, US - United States, CA - Canada):<br>
+<input type = "text" id = "FIPS3" /><br>
+Year(2010 to 2014):<br>
+Year: <input type = "text" id = "YEAR3" /><br>
+<input type = "button" id = "result3" value = "Get Data" />
 </body>
 </html>
