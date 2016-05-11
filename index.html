@@ -1,11 +1,45 @@
 <!DOCTYPE html>
 <html>
 <head>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+<link rel="stylesheet" href="css/bootstrap.v3.min.css">
+<style>
+h3 {
+    font-size: 19pt;
+    color: #c0504d;
+}
+h2 {
+    font-size: 16pt;
+    color: #4d8cbf;
+}
+.modal-body {
+    max-height: 500px;
+    overflow: auto;
+}
+</style>
+<script src="js/jquery-1.12.3.js"></script>
+<script type="text/javascript" src="js/jquery.dataTables.min.js"></script>
+<script type="text/javascript" src="js/dataTables.bootstrap.min.js"></script>
+<script src="js/bootstrap.v3.min.js"></script>
 <script type = "text/javascript" language = "javascript">
  
     $(document).ready(function() {
     //Task1
+        var items=[];
+
+        function render_table(items){
+            $("#result-modal .modal-body").empty().html($( "<table>", {
+                    "class": "table table-responsive table-striped",
+                    html: items.join( "" )})
+                );
+                // $('.table').DataTable({
+                //     // "scrollY":        "380px",
+                //     "scrollCollapse": true,
+                //     "paging":         true,
+                //     'iDisplayLength': 25,
+                // });
+            $('#result-modal').modal();     
+        }
+
     	$("#result1").click(function(event){
     		var url1= "http://api.census.gov/data/timeseries/idb/1year?get=AREA_KM2,NAME,AGE,POP&FIPS="+$("#FIPS1").val()+"&time="+$("#YEAR1").val()+"&SEX="+'';
     		
@@ -14,16 +48,21 @@
     			$.each( data, function(key,value) {
     				var str = value.toString();
     				var res = str.split(",");
-
-    				items.push( "<li id='" + key + "'>" + res[0]+" "+res[1]+"   "+res[2]+"   "+res[3]+"   "+res[4]+"   "+res[5]+"   "+res[6]+"   "+ "</li>" );
+                    var td = "";
+                    for(i=0; i<=6; i++){ 
+                        if(items.length == 0){
+                            td += "<th>" + res[i] + "</th>"
+                        }else{
+                        td += "<td>" + res[i] + "</td>" }
+                    };
+                    tr = "<tr id='" + key + "'>" + td + "</tr>"
+                    if(items.length == 0) tr = "<thead>" + td + "</thead>";
+    				items.push(tr);
     			//	console.log(value);
     				});
-    			$( "<ul/>", {
-    				"class": "my-new-list",
-    				html: items.join( "" )
-    				}).appendTo( "body" );
-    			});
+            render_table(items); 
     		});
+    	});
     	//////////////////////////////////////////////////////////////////////////////////
     	//Task2
     	$("#result2").click(function(event){
@@ -49,19 +88,16 @@
             		var b=res[1];
             		if(count>0){
             			var popCalc=((b-a)/a)*100;
-            			items.push( "<li id='" + key + "'>" + res[0]+" "+popCalc+"</li>" );
+            			items.push( "<tr id='" + key + "'><td>" + res[0]+"</td><td>"+popCalc+"</td></tr>" );
             		}else{
-            			items.push( "<li id='" + key + "'>" + res[0]+" "+res[1]+"</li>" );
+            			items.push( "<thead><tr id='" + key + "'><th>" + res[0]+"</th><th>"+res[1]+"</th></tr></thead>" );
             		}
             		count=count+1;
 
     				});
-    			$( "<ul/>", {
-    				"class": "my-new-list",
-    				html: items.join( "" )
-    				}).appendTo( "body" );
+                render_table(items); 
     		});
-    			});
+    	});
     		
     	//////////////////////////////////////////////////////////////////////////////////
     	//Task3
@@ -86,51 +122,93 @@
     				var str = value.toString();
     				var res = str.split(",");
             		if(count>0){
-            			items.push( "<li id='" + key + "'>" + res[0]+"&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+myArray[count]+"&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+res[1]+"</li>" );
+            			items.push( "<tr id='" + key + "'><td>"+res[0]
+                            +"</td><td>"+myArray[count]+"</td><td>"+res[1]+"</td></tr>" );
             		}else{
-            			items.push( "<li id='" + key + "'>" + res[0]+"&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp&nbsp"+"MALE"+"&nbsp&nbsp&nbsp&nbsp&nbsp"+"FEMALE"+"</li>" );
+            			items.push( "<thead><tr id='" + key + "'><th>" + res[0]
+                            +"</th><th>"+"MALE"+"</th><th>"+"FEMALE"+"</th></tr></thead>" );
             		}
             		count=count+1;
 
     				});
-    			$( "<ul/>", {
-    				"class": "my-new-list",
-    				html: items.join( "" )
-    				}).appendTo( "body" );
+    			render_table(items);        
     		});
-    			});
+    	});
     		
     	//////////////////////////////////////////////////////////////////////////////////
-
-    	});
+        // $("button.graph").click(function(event){
+        //     $(".chart").load("graph.html");
+        // })
+    });
 
 </script>
 </head>
 <body>
-Task 1:<br>
-Population for all ages for a given country and year:<br>
-Country(Ex: IN - India, UK - United Kingdom, US - United States, CA - Canada):<br>
-<input type = "text" id = "FIPS1" /><br>
-Year(2010 to 2014):<br>
-<input type = "text" id = "YEAR1" /><br>
-<input type = "button" id = "result1" value = "Get Data" />
-<br>Task 2:<br>
-Percentage increase/decrease in population for all ages for given years duration for a given country:<br>
-Country(Ex: IN - India, UK - United Kingdom, US - United States, CA - Canada):<br>
-<input type = "text" id = "FIPS2" /><br>
-Year(2010 to 2014):<br>
-Year1: <input type = "text" id = "YEAR2_1" /><br>
-Year2: <input type = "text" id = "YEAR2_2" /><br>
-<input type = "button" id = "result2" value = "Get Data" />
-<br>Task 3:<br>
-Display male and female population for all ages for the year "2014" and country "IN".
-Country(Ex: IN - India, UK - United Kingdom, US - United States, CA - Canada):<br>
-<input type = "text" id = "FIPS3" /><br>
-Year(2010 to 2014):<br>
-Year: <input type = "text" id = "YEAR3" /><br>
-<input type = "button" id = "result3" value = "Get Data" />
-<br>Task 4:<br>
-<a href="graph.html">Get Graph</a>
+<div class="container">
+    <form role="form">
+        <h3>Task 1:</h3>
+        <h2>Population for all ages for a given country and year:</h2>
+        <div class="form-group">
+            <label for="FIPS1">Country(Ex: IN - India, UK - United Kingdom, US - United States, CA - Canada):</label>
+            <input type="text" id="FIPS1" class="form-control"/>
+        </div>
+        <div class="form-group">
+            <label for="YEAR1">Year(2010 to 2014):</label>
+            <input type="text" id="YEAR1" class="form-control" />
+        </div>
+        <input type="button" id="result1" class="btn btn-primary" value="Get Data"/>
 
+        <h3>Task 2:</h3>
+        <h2>Percentage increase/decrease in population for all ages for given years duration for a given country:</h2>
+        <div class="form-group">
+            <label for="FIPS2">Country(Ex: IN - India, UK - United Kingdom, US - United States, CA - Canada):</label>
+            <input type="text" id="FIPS2" class="form-control"/>
+        </div>
+        <label for="YEAR2_1">Year(2010 to 2014):</label>
+        <div class="form-group">
+            <label for="YEAR2_1">Year1:</label>
+            <input type="text" id="YEAR2_1" class="form-control"/>
+        </div>
+        <div class="form-group">
+            <label for="YEAR2_2">Year2:</label>
+            <input type="text" id="YEAR2_2" class="form-control"/>
+        </div>
+        <input type="button" id="result2" class="btn btn-primary" value = "Get Data" />
+
+        <h3>Task 3:</h3>
+        <h2>
+        Display male and female population for all ages for the year "2014" and country "IN".
+        </h2>
+        <div class="form-group">
+            <label for="FIPS3">
+                Country(Ex: IN - India, UK - United Kingdom, US - United States, CA - Canada):
+            </label>
+            <input type="text" id="FIPS3" class="form-control"/>
+        </div>
+        <label for="YEAR3">Year(2010 to 2014):</label>
+        <div class="form-group">
+            <label for="YEAR3">Year:</label>
+            <input type="text" id="YEAR3" class="form-control"/>
+        </div>
+        <input type="button" id="result3" class="btn btn-primary" value ="Get Data" />
+    </form>
+    <div class="row">
+        <h3>Task 4:</h3>
+        <div class="col-md-12">
+            <a class="btn btn-primary graph" href="graph.html">Get Graph</a>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="result-modal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+        <div class="modal-header">
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+            <h4 class="modal-title" style="font-family:calibri;">Result</h4>
+        </div>
+        <div class="modal-body"></div>
+    </div>
+  </div>
+</div>
 </body>
 </html>

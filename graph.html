@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <meta charset="utf-8">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.2/jquery.min.js"></script>
+<script src="js/jquery-1.12.3.js"></script>
 <style>
 
 svg {
@@ -47,7 +47,7 @@ rect:first-child {
 
 </style>
 <body>
-<script src="http://d3js.org/d3.v3.min.js"></script>
+<script src="js/d3.v3.min.js"></script>
 <script>
   var myUrl="http://api.census.gov/data/timeseries/idb/1year?get=AGE,POP&FIPS&time=2012&SEX";
       var margin = {top: 20, right: 40, bottom: 30, left: 20},
@@ -83,7 +83,7 @@ rect:first-child {
       var title = svg.append("text")
           .attr("class", "title")
           .attr("dy", ".71em")
-          .text('Population Index');
+          .text('Population in 2012');
 
       //d3.csv(, function(error, data) {
       d3.json(myUrl, function (data) {
