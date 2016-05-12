@@ -136,9 +136,9 @@ h2 {
     	});
     		
     	//////////////////////////////////////////////////////////////////////////////////
-        // $("button.graph").click(function(event){
-        //     $(".chart").load("graph.html");
-        // })
+        $(document).on("click", ".close", function(){
+    		location.reload(true);
+		});
     });
 
 </script>
